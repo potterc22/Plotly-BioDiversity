@@ -16,7 +16,7 @@ function buildDemographic(id) {
             if (metadata[i].id == id) {
                 Object.entries(metadata[i]).forEach(([key,value]) => {
                     var row = sampleDem.append("p").append("b");
-                    row.text(`${key}:${value}`)
+                    row.text(`${key}: ${value}`)
                 })                
             }
         }
@@ -57,9 +57,10 @@ function buildPlots(id) {
         }
     
         // console.log bar chart variables
-        console.log(barValues)
-        console.log(stringLabels)
-        console.log(barHovertext)
+        // console.log(barValues)
+        // console.log(stringLabels)
+        // console.log(barHovertext)
+
         // declare data variable for plot
         data = [{
             // Reverse the array to accommodate Plotly's defaults
@@ -71,7 +72,7 @@ function buildPlots(id) {
         }]
         // set the bar graph layout
         layout = {
-            title: "Top 10 OTUs Found",
+            title: "Top 10 Bacteria Cultures Found",
             margin: {
                 l: 100,
                 r: 100,
@@ -86,9 +87,9 @@ function buildPlots(id) {
         Plotly.newPlot("bar", data, layout)
 
         // console.log bubble chart variables
-        console.log(xValues)
-        console.log(yValues)
-        console.log(textValues)
+        // console.log(xValues)
+        // console.log(yValues)
+        // console.log(textValues)
 
         // declare data variable for bubble plot
         data2 = [{
@@ -98,13 +99,17 @@ function buildPlots(id) {
             mode: 'markers',
             marker: {
                 size: markerSize,
-                color: markercolor
+                color: markercolor,
             },
             text: textValues.reverse(),
             type: "bubble"
         }]
         // set the bubble chart layout
         layout2 = {
+            title: "Bacteria Cultures per Sample",
+            xaxis: {
+                title: "OTU ID"
+            },
             margin: {
                 l: 100,
                 r: 100,
@@ -140,6 +145,11 @@ function init() {
         buildPlots(firstSample)
     });
     
+}
+
+function optionChanged(newSample) {
+    buildDemographic(newSample)
+    buildPlots(newSample)
 }
 
 // initialize the dashboard
