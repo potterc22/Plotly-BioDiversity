@@ -1,9 +1,4 @@
 var samplesFile = "../samples.json"
-// create an object to hold the 
-var barValues = []
-var barLabels = []
-var barHovertext = []
-var stringLabels =[]
 
 // build Demographic info box with metadata
 function buildDemographic(id) {
@@ -15,14 +10,12 @@ function buildDemographic(id) {
         sampleDem.html("")
         // declare metadata variable
         var metadata = data.metadata
-        console.log(metadata)
+
         for (i=0; i<metadata.length; i++) {
-            console.log([metadata[i].id, id])
 
             if (metadata[i].id == id) {
                 Object.entries(metadata[i]).forEach(([key,value]) => {
                     var row = sampleDem.append("p").append("b");
-                    console.log([key, value])
                     row.text(`${key}:${value}`)
                 })                
             }
@@ -32,51 +25,98 @@ function buildDemographic(id) {
     
 }
 
+var barValues = []
+var barLabels = []
+var barHovertext = []
+var stringLabels =[]
 
+function buildPlots(id) {
+    d3.json(samplesFile).then(function(data) {
+        var dropdownValues = data.names
+        var samples = data.samples
+        
+        // loop through each individual
+        for (i=0; i<samples.length; i++) {
+            if (samples[i].id == id) {
+                console.log(samples[i].id)
+                // declare variables for bar graph
+                barValues = samples[i].sample_values.slice(0,9)
+                barLabels = samples[i].otu_ids.slice(0,9)
+                barHovertext = samples[i].otu_labels.slice(0,9)
+                var stringLabel = barLabels.toString().split(",")
+                stringLabels.push(stringLabel)
 
-d3.json(samplesFile).then(function(data) {
-    var dropdownValues = data.names
-    // loop through each individual
-    for (i=0; i<dropdownValues.length; i++) {
-        barValues.push(data.samples[i].sample_values.slice(0,9))
-        barLabels.push(data.samples[i].otu_ids.slice(0,9))
-        barHovertext.push(data.samples[i].otu_labels.slice(0,9))
-        var stringLabel = barLabels[i].toString().split(",")
-        stringLabels.push(stringLabel)
-    }
-
-    // sort bar values in descending order
-    barValues.sort((a,b) => b - a)
-
-    // Reverse the array to accommodate Plotly's defaults
-    
-
-    console.log(barValues[0])
-    console.log(stringLabels[0])
-    console.log(barHovertext[0])
-    // declare data variable for plot
-    data = [{
-        x: barValues[0].reverse(),
-        y: stringLabels[0].reverse(),
-        text: barHovertext[0],
-        type: "bar",
-        orientation: "h"
-    }]
-    // set the bar graph layout
-    layout = {
-        title: "Top 10 OTUs Found",
-        margin: {
-            l: 100,
-            r: 100,
-            t: 50,
-            b: 50
-        },
-        yaxis: {
-            type: 'category'
+                // declare variables for bubble chart
+                var xValues = samples[i].otu_ids
+                var yValues = samples[i].sample_values
+                var markerSize = samples[i].sample_values
+                var markercolor = samples[i].otu_ids
+                var textValues = samples[i].otu_labels
+            }
+            
         }
-    }
-    Plotly.newPlot("bar", data, layout)
-})
+    
+        // console.log bar chart variables
+        console.log(barValues)
+        console.log(stringLabels)
+        console.log(barHovertext)
+        // declare data variable for plot
+        data = [{
+            // Reverse the array to accommodate Plotly's defaults
+            x: barValues.reverse(),
+            y: stringLabels[0].reverse(),
+            text: barHovertext.reverse(),
+            type: "bar",
+            orientation: "h"
+        }]
+        // set the bar graph layout
+        layout = {
+            title: "Top 10 OTUs Found",
+            margin: {
+                l: 100,
+                r: 100,
+                t: 50,
+                b: 50
+            },
+            yaxis: {
+                type: 'category'
+            }
+        }
+        // Create bar chart
+        Plotly.newPlot("bar", data, layout)
+
+        // console.log bubble chart variables
+        console.log(xValues)
+        console.log(yValues)
+        console.log(textValues)
+
+        // declare data variable for bubble plot
+        data2 = [{
+            // Reverse the array to accommodate Plotly's defaults
+            x: xValues.reverse(),
+            y: yValues.reverse(),
+            mode: 'markers',
+            marker: {
+                size: markerSize,
+                color: markercolor
+            },
+            text: textValues.reverse(),
+            type: "bubble"
+        }]
+        // set the bubble chart layout
+        layout2 = {
+            margin: {
+                l: 100,
+                r: 100,
+                t: 50,
+                b: 50
+            },
+        }
+        // Create bubble chart 
+        Plotly.newPlot("bubble", data2, layout2)
+    })
+}
+
 
 
 function init() {
@@ -97,6 +137,7 @@ function init() {
         const firstSample = dropdownLabels[0]
         // use the first sample to build the initial plots
         buildDemographic(firstSample)    
+        buildPlots(firstSample)
     });
     
 }
