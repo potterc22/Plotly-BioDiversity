@@ -54,6 +54,7 @@ function buildPlots(id) {
                 var markercolor = samples[i].otu_ids
                 var textValues = samples[i].otu_labels
             }
+            // create variable for belly button washing frequency
             if (metadata[i].id == id) {
                 var washFrequency = metadata[i].wfreq
             }
@@ -136,7 +137,6 @@ function buildPlots(id) {
         // set the gauge chart layout
         layout3 = { 
             title: "Belly Button Washing Frequency",
-            subtitle: "Scrubs per Week",
             width: 600, 
             height: 500,
             margin: {
