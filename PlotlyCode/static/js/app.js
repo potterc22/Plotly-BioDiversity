@@ -34,6 +34,7 @@ function buildPlots(id) {
     d3.json(samplesFile).then(function(data) {
         var dropdownValues = data.names
         var samples = data.samples
+        var metadata = data.metadata
         
         // loop through each individual
         for (i=0; i<samples.length; i++) {
@@ -52,6 +53,9 @@ function buildPlots(id) {
                 var markerSize = samples[i].sample_values
                 var markercolor = samples[i].otu_ids
                 var textValues = samples[i].otu_labels
+            }
+            if (metadata[i].id == id) {
+                var washFrequency = metadata[i].wfreq
             }
             
         }
@@ -118,6 +122,31 @@ function buildPlots(id) {
         }
         // Create bubble chart 
         Plotly.newPlot("bubble", data2, layout2)
+
+        // declare data variable for gauge chart
+        data3 = [{
+            domain: { x: [0,1], y: [0,1] },
+            type: "indicator",
+            mode: "gauge+number",
+            value: washFrequency,
+            gauge: { 
+                axis: { range: [null, 9] } 
+            },
+        }]
+        // set the gauge chart layout
+        layout3 = { 
+            title: "Belly Button Washing Frequency",
+            subtitle: "Scrubs per Week",
+            width: 600, 
+            height: 500,
+            margin: {
+                t: 120,
+                b: 140,
+                r: 120
+            }
+        }
+        // create gauge chart
+        Plotly.newPlot("gauge", data3, layout3)
     })
 }
 
