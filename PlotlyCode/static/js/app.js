@@ -140,9 +140,10 @@ function buildPlots(id) {
             width: 600, 
             height: 500,
             margin: {
-                t: 120,
-                b: 140,
-                r: 120
+                l: 100,
+                r: 100,
+                t: 50,
+                b: 150
             }
         }
         // create gauge chart
