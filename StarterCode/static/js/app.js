@@ -15,7 +15,7 @@ function buildDemographic(id) {
 
             if (metadata[i].id == id) {
                 Object.entries(metadata[i]).forEach(([key,value]) => {
-                    var row = sampleDem.append("p").append("b");
+                    var row = sampleDem.append("p");
                     row.text(`${key}: ${value}`)
                 })                
             }
@@ -55,7 +55,6 @@ function buildPlots(id) {
             }
             
         }
-    
         // console.log bar chart variables
         // console.log(barValues)
         // console.log(stringLabels)
