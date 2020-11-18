@@ -1,4 +1,4 @@
-var samplesFile = "../samples.json"
+var samplesFile = "samples.json"
 
 // build Demographic info box with metadata
 function buildDemographic(id) {
@@ -136,7 +136,7 @@ function buildPlots(id) {
         }]
         // set the gauge chart layout
         layout3 = { 
-            title: "Belly Button Washing Frequency",
+            title: "Belly Button Washes per Week",
             width: 600, 
             height: 500,
             margin: {
